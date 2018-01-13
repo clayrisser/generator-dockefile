@@ -2,6 +2,6 @@ version: '2'
 
 services:
   <%= name %>:
-    image: <%= imageName %>
+    image: <%= imageName %>:stable
     ports:
-      -p <%= port %>
+      - <%= port %>:<%= port %>

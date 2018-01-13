@@ -38,13 +38,13 @@ export default class extends Generator {
         type: 'input',
         name: 'description',
         message: 'Project Description:',
-        default: `The awesome ${name} project`
+        default: `Docker image for ${name}`
       },
       {
         type: 'input',
         name: 'version',
         message: 'Version:',
-        default: 'v0.0.1'
+        default: '0.0.1'
       },
       {
         type: 'input',
@@ -70,12 +70,20 @@ export default class extends Generator {
         default: guessEmail()
       }
     ]);
+    const { githubUsername } = await this.optionOrPrompt([
+      {
+        type: 'input',
+        name: 'githubUsername',
+        message: 'GitHub Username:',
+        default: guessUsername(authorEmail)
+      }
+    ]);
     const { authorUrl } = await this.optionOrPrompt([
       {
         type: 'input',
         name: 'authorUrl',
         message: 'Author URL:',
-        default: `https://${guessUsername(authorEmail)}.com`
+        default: `https://${githubUsername}.com`
       }
     ]);
     const {
@@ -90,26 +98,26 @@ export default class extends Generator {
         type: 'input',
         name: 'homepage',
         message: 'Homepage:',
-        default: `https://github.com/${guessUsername(authorEmail)}/${name}`
+        default: `https://hub.docker.com/r/${githubUsername}/${name}`
       },
       {
         type: 'input',
         name: 'repository',
         message: 'Repository:',
-        default: `https://github.com/${guessUsername(authorEmail)}/${name}`
+        default: `https://github.com/${githubUsername}/docker-${name}`
       },
       {
         type: 'list',
         name: 'template',
         message: 'Template',
-        choices: ['minimal'],
-        default: 'minimal'
+        choices: ['tini', 'supervisord', 'php'],
+        default: 'tini'
       },
       {
         type: 'input',
         name: 'imageName',
         message: 'Image Name',
-        default: `${guessUsername(authorEmail)}/${name}`
+        default: `${githubUsername}/${name}`
       },
       {
         type: 'input',
@@ -120,24 +128,25 @@ export default class extends Generator {
       {
         type: 'confirm',
         name: 'install',
-        message: 'Install dependencies',
+        message: 'Install Dependencies',
         default: true
       }
     ]);
     this.answers = {
-      name,
-      description,
-      version,
-      license,
+      authorEmail,
       authorName,
       authorUrl,
-      authorEmail,
+      description,
+      githubUsername,
       homepage,
+      imageName,
+      install,
+      license,
+      name,
+      port,
       repository,
       template,
-      port,
-      imageName,
-      install
+      version
     };
     this.context = { ...this.context, ...this.answers };
   }

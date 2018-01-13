@@ -1,10 +1,10 @@
 FROM alpine:3.7
 
 LABEL image=<%= imageName %>:stable \
-      maintainer="<%= authorName %> <<%= authorEmail %>>" \
+      maintainer="<%= authorName %> <<%= authorEmail %>> (<%= authorUrl %>)" \
       base=alpine:3.7
 
-EXPOSE 8080
+EXPOSE <%= port %>
 
 RUN apk add --no-cache \
         tini && \

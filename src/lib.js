@@ -52,6 +52,11 @@ export function copy(yo) {
       yo.templatePath('template/shared/stable/**'),
       yo.destinationPath('stable'),
       ...yo.context
+    ),
+    yo.fs.copyTpl(
+      yo.templatePath(`template/${yo.context.template}/stable/**`),
+      yo.destinationPath('stable'),
+      ...yo.context
     )
   ]);
 }

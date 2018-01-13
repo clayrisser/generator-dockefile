@@ -40,7 +40,7 @@ ssh:
 
 .PHONY: essh
 essh:
-	@docker exec run$(SOME_CONTAINER) /bin/sh
+	@docker exec -it run$(SOME_CONTAINER) /bin/sh
 
 .PHONY: clean
 clean:
