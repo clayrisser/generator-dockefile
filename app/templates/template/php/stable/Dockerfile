@@ -14,21 +14,19 @@ RUN apk add --no-cache --virtual build-deps \
 RUN docker-php-ext-install \
       opcache
 
-COPY stable /tmp
-
-RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
-    mv /tmp/supervisord.conf /etc/supervisord.conf && \
-    mv /tmp/nginx.conf /etc/nginx/conf.d/default.conf
-
 WORKDIR /var/www/html
 
-COPY stable/index.php /var/www/html
+COPY stable /tmp
 
-RUN chown -R nobody:nobody /var/www/html && \
+RUN mv /tmp/index.php /var/www/html && \
+    chown -R nobody:nobody /var/www/html && \
     find /var/www/html -type f -exec chmod 644 {} \; && \
     find /var/www/html -type d -exec chmod 755 {} \;
 
-RUN apk del build-deps && \
+RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh && \
+    mv /tmp/supervisord.conf /etc/supervisord.conf && \
+    mv /tmp/nginx.conf /etc/nginx/conf.d/default.conf && \
+    apk del build-deps && \
     rm -rf /tmp/* /tmp/.* &>/dev/null || true
 
 EXPOSE <%= port %>
