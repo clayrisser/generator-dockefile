@@ -4,21 +4,23 @@ LABEL image=<%= imageName %>:stable \
       maintainer="<%= authorName %> <<%= authorEmail %>> (<%= authorUrl %>)" \
       base=alpine:3.7
 
-EXPOSE <%= port %>
-
 RUN apk add --no-cache \
-        tini && \
-    apk add --no-cache --virtual build-deps \
-        build-base
+      tini
+RUN apk add --no-cache --virtual build-deps \
+      build-base
+RUN mkdir -p /usr/local/sbin && \
+    touch /var/log/date.log
 
-WORKDIR /app
+COPY stable /tmp
 
-COPY /requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
-COPY /app /app
-RUN apk del build-deps
+RUN mv /tmp/entrypoint.sh /usr/local/sbin/entrypoint.sh
 
-ENV HELLO=world \
-    HOWDY=texas
+WORKDIR /opt/<%= name %>
 
-ENTRYPOINT ["/sbin/tini", "--", "python", "/app/server.py"]
+RUN apk del build-deps && \
+    rm -rf /tmp/* /tmp/.* &>/dev/null || true
+
+ENV HELLO=world
+
+ENTRYPOINT ["tini", "--", "/bin/sh", "/usr/local/sbin/entrypoint.sh"]
+CMD ["hello"]

@@ -21,4 +21,7 @@ WORKDIR /opt/<%= name %>
 RUN apk del build-deps && \
     rm -rf /tmp/* /tmp/.* &>/dev/null || true
 
+ENV HELLO=world
+
 ENTRYPOINT ["/bin/sh", "/usr/local/sbin/entrypoint.sh"]
+CMD ["hello"]
